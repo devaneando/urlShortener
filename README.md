@@ -1,5 +1,9 @@
 # urlShortener
 
+A simple url shortener made in Symfony
+
+## Install
+
 Create the database
 
 ```sql
