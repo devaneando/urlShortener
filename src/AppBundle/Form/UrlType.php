@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Url;
+use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType as FormUrlType;
@@ -22,6 +23,7 @@ class UrlType extends AbstractType
                 FormUrlType::class,
                 [
                     'label' => 'Url to shorten',
+                    'required' => true,
                     'attr'=> [
                         'class' => 'form-control large',
                         'maxlength' => 255,

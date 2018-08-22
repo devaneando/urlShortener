@@ -36,6 +36,11 @@ class Url
     private $url;
 
     /**
+     * @var bool
+     */
+    private $recaptcha;
+
+    /**
      * Get id.
      *
      * @return int
@@ -91,5 +96,29 @@ class Url
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * Get the value of recaptcha.
+     *
+     * @return bool
+     */
+    public function getRecaptcha()
+    {
+        return $this->recaptcha;
+    }
+
+    /**
+     * Set the value of recaptcha.
+     *
+     * @param bool $recaptcha
+     *
+     * @return self
+     */
+    public function setRecaptcha(bool $recaptcha)
+    {
+        $this->recaptcha = $recaptcha;
+
+        return $this;
     }
 }

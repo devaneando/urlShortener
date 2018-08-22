@@ -2,6 +2,8 @@
 
 A simple url shortener made in Symfony
 
+![Shortener](shorten.jpg "Logo Title Text 1")
+
 ## Install
 
 Create the database
@@ -27,5 +29,19 @@ parameters:
 Update the schema
 
 ```bash
-bin/console doctrine:schema:update
+bin/console doctrine:schema:update --force
 ```
+
+## Usage
+
+Start the development web server
+
+```bash
+bin/console server:start
+```
+
+Open the <http://localhost:8000/> in your browser
+
+Paste the url you want to shorten in `Url to shorten` field. You will get a link to the shortened URL.
+
+To open the shortened URL, use <http://localhost:8000/{hash}>

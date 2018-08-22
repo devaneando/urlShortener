@@ -17,6 +17,8 @@
 </div>
 {{ form_start(form) }}
 {{ form_widget(form) }}
+<div class="g-recaptcha center_horizontally" data-sitekey="6LfoPGsUAAAAACb4QrrHmPeCDPG2iTFki485ojcO" data-callback="correctCaptcha"></div>
+<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl=en"></script>
 {{ form_end(form) }}
     {% if app.session.flashBag.has('success') %}
         <div class="alert alert-success">
@@ -26,3 +28,17 @@
         </div>
     {% endif %}
 {% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $("form").each(function() {
+        $(this).find(':input[type="submit"]').prop('disabled', true);
+    });
+    function correctCaptcha() {
+        $("form").each(function() {
+            $(this).find(':input[type="submit"]').prop('disabled', false);
+        });
+    }
+</script>
+{% endblock %}
+
