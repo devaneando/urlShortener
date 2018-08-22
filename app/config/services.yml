@@ -44,3 +44,5 @@ services:
         class: AppBundle\Helper\UrlHelper
         calls:
             - [setUrlRepository, ['@app.repository.url']]
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+

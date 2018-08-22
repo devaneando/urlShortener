@@ -35,7 +35,7 @@
     "require-dev": {
         "phpstan/phpstan": "^0.10.3",
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "*"
     },
     "scripts": {
         "symfony-scripts": [

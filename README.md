@@ -23,3 +23,9 @@ parameters:
     database_user: url_admin
     database_password: 12345678
 ```
+
+Update the schema
+
+```bash
+bin/console doctrine:schema:update
+```

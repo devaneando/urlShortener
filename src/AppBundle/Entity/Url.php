@@ -31,7 +31,7 @@ class Url
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="string", length=2083, unique=true)
+     * @ORM\Column(name="url", type="string", length=255, unique=true)
      */
     private $url;
 

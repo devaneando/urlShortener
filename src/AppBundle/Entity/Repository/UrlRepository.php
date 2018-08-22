@@ -3,6 +3,8 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Url;
+use AppBundle\Exception\NonexistentHashException;
+use AppBundle\Exception\NonexistentUrlException;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -22,31 +24,66 @@ class UrlRepository extends EntityRepository
      */
     public function findOneByUrl(string $url)
     {
-        return $this->findOneBy(['url' =>$url]);
+        $url = trim($url);
+
+        /** @var Url $url */
+        $url = $this->findOneBy(['url' =>$url]);
+
+        return $url;
     }
 
     /**
-     * Search the Url by its url.
-     * If no Url exists with the given url, create a new one and return it.
+     * Get the Url by its url or throws an exception.
      *
      * @param string $url
+     *
+     * @throws NonexistentUrlException
      *
      * @return Url
      */
     public function getOneByUrl(string $url)
     {
-        $url = trim($url);
-        $url = $this->findOneBy(['url' =>$url]);
-        if ($url) {
-            return $url;
+        $url = $this->findOneByUrl($url);
+
+        if (!$url) {
+            throw new NonexistentUrlException();
         }
 
-        $url = new Url();
-        $url
-            ->setHash(hash(crc32, $url))
-            ->setUrl($url);
-        $this->_em->persist($url);
-        $this->_em->flush($url);
+        return $url;
+    }
+
+    /**
+     * Find the Url by its hash.
+     *
+     * @param string $hash
+     *
+     * @return Url|null the entity instance or NULL if the entity can not be found
+     */
+    public function findOneByHash(string $hash)
+    {
+        $hash = trim($hash);
+        /** @var Url $url */
+        $url = $this->findOneBy(['hash' => $hash]);
+
+        return $url;
+    }
+
+    /**
+     * Get the Url by its hash or throws an exception.
+     *
+     * @param string $hash
+     *
+     * @throws NonexistentHashException
+     *
+     * @return Url
+     */
+    public function getOneByHash(string $hash)
+    {
+        $url = $this->findOneByHash($hash);
+
+        if (!$url) {
+            throw new NonexistentHashException();
+        }
 
         return $url;
     }
