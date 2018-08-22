@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Url;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -12,4 +13,41 @@ use Doctrine\ORM\EntityRepository;
  */
 class UrlRepository extends EntityRepository
 {
+    /**
+     * Find the Url by its url.
+     *
+     * @param string $url
+     *
+     * @return Url|null the entity instance or NULL if the entity can not be found
+     */
+    public function findOneByUrl(string $url)
+    {
+        return $this->findOneBy(['url' =>$url]);
+    }
+
+    /**
+     * Search the Url by its url.
+     * If no Url exists with the given url, create a new one and return it.
+     *
+     * @param string $url
+     *
+     * @return Url
+     */
+    public function getOneByUrl(string $url)
+    {
+        $url = trim($url);
+        $url = $this->findOneBy(['url' =>$url]);
+        if ($url) {
+            return $url;
+        }
+
+        $url = new Url();
+        $url
+            ->setHash(hash(crc32, $url))
+            ->setUrl($url);
+        $this->_em->persist($url);
+        $this->_em->flush($url);
+
+        return $url;
+    }
 }
