@@ -7,7 +7,6 @@ use AppBundle\Entity\Url;
 use AppBundle\Exception\InvalidUrlException;
 use AppBundle\Exception\NonexistentHashException;
 use AppBundle\Exception\NonexistentUrlException;
-use Doctrine\ORM\EntityManager;
 
 class UrlHelper
 {
@@ -20,11 +19,6 @@ class UrlHelper
     private $urlRepository;
 
     /**
-     * @var EntityManager;
-     */
-    private $entityManager;
-
-    /**
      * Set urlRepository.
      *
      * @param UrlRepository $urlRepository
@@ -34,20 +28,6 @@ class UrlHelper
     public function setUrlRepository(UrlRepository $urlRepository)
     {
         $this->urlRepository = $urlRepository;
-
-        return $this;
-    }
-
-    /**
-     * Set entityManager.
-     *
-     * @param EntityManager $entityManager
-     *
-     * @return self
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
 
         return $this;
     }
@@ -77,8 +57,7 @@ class UrlHelper
             $objUrl
                 ->setHash(hash(self::HASH_ALGORITM, $url))
                 ->setUrl($url);
-            $this->entityManager->persist($objUrl);
-            $this->entityManager->flush($objUrl);
+            $this->urlRepository->save($objUrl);
         }
 
         return $objUrl->getHash();

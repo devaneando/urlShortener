@@ -22,7 +22,10 @@ class UrlType extends AbstractType
                 FormUrlType::class,
                 [
                     'label' => 'Url to shorten',
-                    'attr'=> ['class' => 'form-control large'],
+                    'attr'=> [
+                        'class' => 'form-control large',
+                        'maxlength' => 255,
+                    ],
                 ]
             )
             ->add(

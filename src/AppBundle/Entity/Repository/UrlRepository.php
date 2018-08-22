@@ -16,6 +16,17 @@ use Doctrine\ORM\EntityRepository;
 class UrlRepository extends EntityRepository
 {
     /**
+     * Persits and flus a new object.
+     *
+     * @param Url $url
+     */
+    public function save(Url $url)
+    {
+        $this->_em->persist($url);
+        $this->_em->flush($url);
+    }
+
+    /**
      * Find the Url by its url.
      *
      * @param string $url

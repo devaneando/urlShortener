@@ -11,16 +11,7 @@ services:
         # Since I'm manually configuring my services, I want them public
         public: true
 
-    # This is not in use
-    AppBundle\:
-        resource: '../../src/AppBundle/*'
-        exclude: '../../src/AppBundle/{Entity,Repository,Tests}'
 
-    # This is not in use
-    AppBundle\Controller\:
-        resource: '../../src/AppBundle/Controller'
-        public: true
-        tags: ['controller.service_arguments']
 
     ##### Repositories
 
@@ -35,8 +26,11 @@ services:
 
     app.controller.url:
         class: AppBundle\Controller\UrlController
+        tags: ['controller.service_arguments']
         calls:
-            - [setUrlRepository, ['@app.repository.url']]
+            - [setContainer, ['@service_container']]
+            - [setUrlHelper, ['@app.helper.url']]
+
 
     ##### Helpers
 
@@ -44,5 +38,3 @@ services:
         class: AppBundle\Helper\UrlHelper
         calls:
             - [setUrlRepository, ['@app.repository.url']]
-            - [setEntityManager, ['@doctrine.orm.entity_manager']]
-
