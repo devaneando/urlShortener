@@ -3,19 +3,22 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Url;
+use AppBundle\Exception\NonexistentHashException;
 use AppBundle\Form\UrlType;
 use AppBundle\Helper\UrlHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @\Sensio\Bundle\FrameworkExtraBundle\Configuration\Route(service="app.controller.url")
  */
-class UrlController extends Controller
+class UrlController extends controller
 {
     /**
      * @var UrlHelper
@@ -67,15 +70,17 @@ class UrlController extends Controller
             /** @var Session $session */
             $session = $request->getSession();
 
+            $originalUrl = $this->generateUrl(
+                'go_to',
+                ['hash' => $hash],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
             $session->getFlashBag()->add(
                 'success',
                 sprintf(
-                    'Your shortened url is: %s',
-                    $this->generateUrl(
-                        'go_to',
-                        ['hash' => $hash],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    )
+                    'Your shortened url is: <a href="%s" target="_blank">%s</a>',
+                    $originalUrl,
+                    $originalUrl
                 )
             );
         }
@@ -88,12 +93,27 @@ class UrlController extends Controller
 
     /**
      * @Route("/{hash}", name="go_to", requirements={"page"="[a-zA-Z0-9]{8}"})
+     *
+     * Based on a hash, redirect to the correct url.
+     *
+     * @param Request $request
+     * @param string $hash
+     *
+     * @return RedirectResponse
      */
-    public function goToAction(Request $request)
+    public function goToAction(Request $request, string $hash)
     {
-        // replace this example code with whatever you need
-        return $this->render('url/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        // @Fix: the urlHelper service injection is not working here. The lines below are a workaround.
+        /** @var UrlHelper $urlHelper */
+        $urlHelper = $this->container->get('app.helper.url');
+        $this->urlHelper = $urlHelper;
+
+        try {
+            $url = $this->urlHelper->getUrl(trim($hash));
+
+            return $this->redirect($url, 302);
+        } catch (NonexistentHashException $ex) {
+            throw new NotFoundHttpException();
+        }
     }
 }
