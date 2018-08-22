@@ -2,6 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Repository\UrlRepository;
+use AppBundle\Entity\Url;
+use AppBundle\Form\UrlType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as ConfigurationRoute;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,7 +14,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class UrlController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @var UrlRepository
+     */
+    private $urlRepository;
+
+    /**
+     * Set urlRepository.
+     *
+     * @param UrlRepository $urlRepository
+     */
+    public function setUrlRepository(UrlRepository $urlRepository)
+    {
+        $this->urlRepository = $urlRepository;
+    }
+
+    /**
+     * @Route("/test", name="test")
      */
     public function indexAction(Request $request)
     {
@@ -21,7 +40,7 @@ class UrlController extends Controller
     }
 
     /**
-     * @Route("/shorten", name="shorten")
+     * @Route("/", name="shorten")
      *
      * Shorten a url.
      *
@@ -31,6 +50,25 @@ class UrlController extends Controller
      */
     public function shortenAction(Request $request)
     {
-        return $this->render('url/shorten_url.html.twig');
+        $url = new Url();
+        $form = $this->createForm(UrlType::class, $url);
+
+        // Handle the form post
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * @TODO: Clean the given url to prevent attacks and persist it
+             * @TODO: Change the flash message to display the generated hash
+             */
+            $request->getSession()
+                ->getFlashBag()
+                ->add('success', 'Return here the URL hash!');
+        }
+
+        return $this->render(
+            'url/shorten_url.html.twig',
+            ['form' => $form->createView()]
+        );
     }
 }

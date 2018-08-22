@@ -15,9 +15,14 @@
     ▀▄▄▄█▀ █   █  ▀█▄█▀   █       ▀▄▄  ▀█▄▄▀  █   █         ▀▄▄▄▄▀  █       ▀▄▄
     </pre>
 </div>
-<form name="frm_shorten">
-    <label for="firstName">Url to shorten</label>
-    <input type="url" class="form-control large" required="true" id="firstName" maxlength=2083 placeholder="" value="" required>
-    <input type="submit" value="Shorten">
-</form>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}
